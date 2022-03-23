@@ -7,42 +7,28 @@ News
 {% endblock title %}
 
 {% block content %}
-    <h1>Все новости</h1>
-    <h3>{{ time_now }}</h3>
-    <hr>
-    {% if news %}
-        <table>
-            <tr>
-                 <td>
-                    Номер
-                </td>
-                <td>
-                    Зоголовок
-                </td>
-                <td>
-                    Текст
-                </td>
-                <td>
-                    Дата публикации
-                </td>
-            </tr>
-        {% for post in news %}
-            <tr>
-                <td>
-                    {{ post.id}}
-                </td>
-                <td>
-                    {{ post.heder|Censor}}
-                <td>
-                    {% filter Censor %}
-                    {{ post.text|truncatechars:50}}
-                    {% endfilter %}
-                </td>
-                <td>
-                    {{ post.time_in}}
-                </td>
-            </tr>
-        {% endfor %}
+   <h1>Все товары</h1>
+   <h3>{{ time_now|date:'M d Y' }}</h3>
+   <h3>{{ next_sale|default_if_none:"Чуть позже сообщим о новостях!" }}</h3>
+   <hr>
+   {% if news %}
+       <table>
+           <tr>
+               <td>Номер</td>
+               <td>Заголовок</td>
+               <td>Текст</td>
+               <td>Дата публикации</td>
+           </tr>
+
+           {% for post in news %}
+           <tr>
+               <td>{{ post.id }}</td>
+               <td>{{ post.title|censor }}</td>
+               <td>{{ post.text|truncatechars:20|censor }}</td>
+               <td>{{ post.dateCreation|date:'d-M-Y H:m' }}</td>
+           </tr>
+           {% endfor %}
+
         </table>
     {% else %}
         <h2>Новостей нет!</h2>
