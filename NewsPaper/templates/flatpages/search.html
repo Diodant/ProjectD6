@@ -2,40 +2,42 @@
 
 {% load custom_filters %}
 
-{% block title %} News {% endblock title %}
+{% block title %} Поиск новостей {% endblock title %}
 
 {% block content %}
-   <h1>Все товары</h1>
-   <h3>{{ time_now|date:'M d Y' }}</h3>
-   <h3>{{ next_sale|default_if_none:"Чуть позже сообщим о новостях!" }}</h3>
-   <hr>
-   {% if news %}
-       <table>
-           <tr>
+
+<h3>Поиск поста</h3>
+
+<form method="GET">
+    {{ filter.form }} <!-- Форму от фильтров за нас сделает django. А вот кнопку, увы придётся делать самому -->
+    <input type="submit" value="Найти">
+</form>
+
+    {% if filter %}
+        <table>
+            <tr>
                <td>Номер</td>
                <td>Заголовок</td>
                <td>Текст</td>
                <td>Дата публикации</td>
            </tr>
-
-           {% for post in news %}
-           <tr>
+            {% for post in filter.qs %}
+            <tr>
                <td>{{ post.id }}</td>
                <td>{{ post.title|censor }}</td>
                <td>{{ post.text|truncatechars:20|censor }}</td>
                <td>{{ post.dateCreation|date:'d-M-Y H:m' }}</td>
            </tr>
-           {% endfor %}
-    </table>
+            {% endfor %}
+
+        </table>
     {% if is_paginated %}
 
-    <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->
     {% if page_obj.has_previous %}
         <a href="?page=1">First</a>
         <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
     {% endif %}
 
-    <!-- Показываем только текущую страницу и ближайшие к ней, чтобы список не тянулся и не захламлял страницу -->
     {% for num in page_obj.paginator.page_range %}
         {% if page_obj.number == num %}
             <a>{{ num }}</a>
@@ -44,13 +46,11 @@
         {% endif %}
     {% endfor %}
 
-    <!-- Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу -->
     {% if page_obj.has_next %}
         <a href="?page={{ page_obj.next_page_number }}">>>></a>
         <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
     {% endif %}
-    {% else %}
-        <h1>Новостей нет!</h1>
-    {% endif %}
-    {% endif %}
+
+{% endif %}
+{% endif %}
 {% endblock content %}
