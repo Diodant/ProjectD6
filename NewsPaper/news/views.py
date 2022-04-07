@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
 from datetime import datetime
@@ -65,3 +65,15 @@ class NewsDelete(DeleteView):
     template_name = 'delete.html'
     queryset = Post.objects.all()
     success_url = '/news/'
+
+
+class AddNews(PermissionRequiredMixin, NewsCreate):
+    permission_required = ('news.add_post',)
+
+
+class ChangeNews(PermissionRequiredMixin, NewsUpdate):
+    permission_required = ('news.change_post',)
+
+
+class DeleteNews(PermissionRequiredMixin, NewsDelete):
+    permission_required = ('news.delete_post',)
