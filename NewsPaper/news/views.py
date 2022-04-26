@@ -2,9 +2,11 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
 from datetime import datetime
-from django.core.paginator import Paginator
 from .filters import PostFilter
 from .forms import PostForm
+from django.http import HttpResponse
+from django.views import View
+from .tasks import hello, send_mail_for_sub_test
 
 
 class NewsList(ListView):
@@ -77,3 +79,11 @@ class ChangeNews(PermissionRequiredMixin, NewsUpdate):
 
 class DeleteNews(PermissionRequiredMixin, NewsDelete):
     permission_required = ('news.delete_post',)
+
+
+class IndexView(View):
+    def get(self, request):
+        # printer.apply_async([10], countdown=10)
+        # hello.delay()
+        send_mail_for_sub_test.delay()
+        return HttpResponse('Hello!')
