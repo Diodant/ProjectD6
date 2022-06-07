@@ -6,7 +6,10 @@ from .filters import PostFilter
 from .forms import PostForm
 from django.http import HttpResponse
 from django.views import View
-from .tasks import hello, send_mail_for_sub_test
+from .tasks import send_mail_for_sub_test
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class NewsList(ListView):
